@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="el"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#173b36"><title>Πρόγραμμα Εκπαίδευσης Ανδρών</title>
+<style>
+:root{--ink:#172b28;--muted:#687873;--bg:#f3f6f4;--card:#fff;--green:#1d6254;--line:#e1e9e5;--amber:#a86510;--red:#b33d36}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,sans-serif}
+header{background:#173b36;color:white;padding:22px 18px 18px}header h1{font-size:21px;margin:0 0 5px}header p{margin:0;color:#d4e5df;font-size:13px}
+main{max-width:900px;margin:auto;padding:15px}.tabs{display:flex;gap:8px;margin:0 0 14px}.tabs button,.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:650;background:#e3ece7;color:#21483f}.tabs button.active,.btn.primary{background:var(--green);color:white}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}.stat{background:white;padding:13px;border-radius:14px;border:1px solid var(--line)}.stat b{font-size:22px;display:block}.stat span{font-size:12px;color:var(--muted)}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.controls input,.controls select{flex:1;min-width:130px;padding:11px;border:1px solid var(--line);border-radius:11px;background:white;font:inherit}
+.person{background:white;border:1px solid var(--line);border-radius:15px;margin:10px 0;padding:14px}.personhead{display:flex;justify-content:space-between;gap:10px;align-items:start;flex-wrap:wrap}.person h3{margin:0 0 3px;font-size:16px}.sub{font-size:12px;color:var(--muted)}
+
+.pill{font-size:11px;border-radius:20px;padding:5px 9px;background:#edf2ef;color:#475852;white-space:nowrap;font-weight:600}
+.pill.pending{background:#eef1f4;color:#52606d;border:1px solid #d5dde4}
+.pill.done{background:#e1f3e9;color:#17633c;border:1px solid #b6e3ca}
+.pill.late{background:#fae8e6;color:#a52e28;border:1px solid #f0c2bd}
+.pill.progress{background:#fff3cd;color:#8a5a00;border:1px solid #f7df88}
+
+.group-badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:999px;cursor:pointer;border:1px solid transparent;transition:transform .12s ease,box-shadow .12s ease;user-select:none}
+.group-badge:hover{transform:translateY(-1px);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.group-badge.g1{background:#e0f2fe;color:#075985;border-color:#7dd3fc}
+.group-badge.g2{background:#f3e8ff;color:#6b21a8;border-color:#d8b4fe}
+.group-badge.g-other{background:#f1f5f9;color:#334155;border-color:#cbd5e1}
+
+.subtabs{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.subtab{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#f7faf8;color:#274039;border-radius:11px;padding:8px 12px;font-size:12.5px;font-weight:650;cursor:pointer;text-align:left}
+.subtab.active{background:var(--green);color:#fff;border-color:var(--green)}
+.subtab .dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;background:#94a3b8}
+.subtab.active .dot{background:#d1fae5}
+.subtab .dot.progress{background:#eab308}
+.subtab .dot.done{background:#16a34a}
+.subtab .dot.late{background:#dc2626}
+
+.item{border-top:1px solid var(--line);padding:12px 0 2px;margin-top:12px}.itemtop{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}.item strong{font-size:14.5px}.trainer{font-size:12.5px;color:var(--muted);margin-top:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+.area-note{margin-top:9px;padding:10px 12px;background:#f4f8f6;border-left:3px solid var(--green);border-radius:8px;font-size:12.5px;line-height:1.48;color:#233b35;white-space:pre-line}
+.area-note-title{font-weight:700;color:var(--green);margin-bottom:3px;font-size:11.5px;letter-spacing:.2px}
+
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.fields label{font-size:11px;color:var(--muted)}.fields select,.fields input,.fields textarea{display:block;width:100%;margin-top:4px;padding:9px;border:1px solid var(--line);border-radius:9px;background:white;color:var(--ink);font:13px system-ui}.fields textarea{min-height:38px;resize:vertical}.wide{grid-column:1/-1}
+
+.fields select.status-pending{background:#f5f7f9;border-color:#cbd5e1;color:#475569}
+.fields select.status-progress{background:#fff8db;border-color:#f2d04e;color:#7c4d00;font-weight:600}
+.fields select.status-done{background:#eaf8f0;border-color:#86efac;color:#14532d;font-weight:600}
+
+.sectiontitle{font-size:14px;margin:18px 0 6px;color:#38564e}.empty{padding:25px;text-align:center;color:var(--muted)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.btn{font-size:13px;cursor:pointer}.note{font-size:12px;color:var(--muted);line-height:1.5;margin:14px 2px}
+@media(max-width:480px){main{padding:12px}.stats{gap:6px}.stat{padding:10px}.stat b{font-size:19px}.fields{grid-template-columns:1fr 1fr}.person{padding:12px}}
+</style></head><body>
+<header><h1>Πρόγραμμα Εκπαίδευσης Ανδρών</h1><p>Καλλιθέα · 2026–2027 · Παρακολούθηση προόδου και εξετάσεων</p></header>
+<main><div class="tabs"><button class="active" data-view="trainees">Εκπαιδευόμενοι</button><button data-view="trainers">Εκπαιδευτές</button></div>
+<div class="stats" id="stats"></div>
+<div class="controls">
+  <select id="personSelect" aria-label="Επιλογή εκπαιδευόμενου"><option value="">-- Επίλεξε εκπαιδευόμενο --</option></select>
+  <select id="trainerSelect" aria-label="Επιλογή εκπαιδευτή" style="display:none"><option value="">-- Επίλεξε εκπαιδευτή --</option></select>
+  <input id="search" placeholder="Αναζήτηση ονόματος ή τομέα">
+  <select id="group"><option value="">Όλες οι ομάδες</option><option value="Ομάδα 1">Ομάδα 1</option><option value="Ομάδα 2">Ομάδα 2</option></select>
+  <select id="statusFilter"><option value="">Όλες οι καταστάσεις</option><option value="Εκκρεμεί">Εκκρεμεί</option><option value="Σε εξέλιξη">Σε εξέλιξη</option><option value="Ολοκληρώθηκε">Ολοκληρώθηκε</option></select>
+</div>
+<div id="content"></div><div class="actions"><button class="btn primary" id="export">Εξαγωγή αντιγράφου</button><button class="btn" id="import">Εισαγωγή αντιγράφου</button><button class="btn" id="reset">Επαναφορά αρχικών</button><input id="file" type="file" accept="application/json" hidden></div>
+<p class="note">Οι αλλαγές αποθηκεύονται σε αυτή τη συσκευή και σε αυτόν τον browser. Για κοινή χρήση μεταξύ πολλών κινητών/εκπαιδευτών χρειάζεται σύνδεση σε κοινή online βάση δεδομένων. Κάνε τακτικά «Εξαγωγή αντιγράφου» για backup.</p>
+</main>
+<script>
+const COMMENTS = {
+  "Ομάδα 1": {
+    "Αξιοπιστία": "Ο διορισμένος θα βοηθήσει τον αδελφό να είναι πιο αξιόπιστος στην εκπλήρωση των διορισμών του. Θα αφιερώσει χρόνο τουλάχιστον μια φορά το 2μηνο για να μιλήσουν, να εντοπίσουν τους λόγους που τον εμποδίζουν να είναι αξιόπιστος και να προτείνει λύσεις.",
+    "Εργο Κηρύγματος": "Ο διορισμένος θα βοηθήσει τον αδελφό πρακτικά να βελτιωθεί τόσο στην συμμετοχή στο έργο όσο και στην ποιότητα του έργου.\nπ.χ. Θα επιδιώξει να βγει εντός του 2μηνου τουλάχιστον μια φορά μαζί του στο έργο και θα το βοηθήσει όπου υπάρχει ανάγκη.",
+    "Χρ. Ιδιότητες & Τρόπος Ζωής": "Ο διορισμένος θα προσπαθήσει να βοηθήσει τον αδελφό να αναπτύξει χριστιανικές ιδιότητες που υπάρχει ανάγκη να βελτιώσει. Μπορεί να γίνει συζύτηση με το πρεσβυτέριο. Ταπεινοφροσύνη, Φιλοπονία, Φιλοξενία, Ζήλος, Πίστη κτλ είναι κάποιες υποψήφιες ιδιότητες.\nΕπίσης θα βοηθήσει σε τομείς βελτίωσης της χριστιανικής ζωής όπως επιλογές σε διασκέδαση, ντύσιμο, διαγωγή, οικ.λατρεία κτλ",
+    "Πν. Στόχοι": "Ο διορισμένος θα βοηθήσει τον αδελφό να θέσει συγκεκριμένους και ρεαλιστικούς πνευματικούς στόχους",
+    "Διδασκαλία": "Ο διορισμένος θα βοηθήσει τον αδελφό να βελτιωθεί σε στοιχεία της διδασκαλίας του (κυρίως για διακονικούς).",
+    "Ποίμανση": "Ο διορισμένος θα βοηθήσει τον αδελφό να εκπαιδευτεί στην ποίμανση (κυρίως για διακονικούς). Μπορεί να διευθετήσει τουλάχιστον μια ποιμαντική στο 2μηνο."
+  },
+  "Ομάδα 2": {
+    "Αξιοπιστία": "Ο διορισμένος θα βοηθήσει τον αδελφό να είναι πιο αξιόπιστος στην εκπλήρωση των διορισμών του. Θα αφιερώσει χρόνο τουλάχιστον μια φορά το 3μηνο για να μιλήσουν, να εντοπίσουν τους λόγους που τον εμποδίζουν να είναι αξιόπιστος και να προτείνει λύσεις.",
+    "Εργο Κηρύγματος": "Ο διορισμένος θα βοηθήσει τον αδελφό πρακτικά να βελτιωθεί τόσο στην συμμετοχή στο έργο όσο και στην ποιότητα του έργου.\nπ.χ. Θα επιδιώξει να βγει εντός του 3μηνου τουλάχιστον μια φορά μαζί του στο έργο και θα το βοηθήσει όπου υπάρχει ανάγκη.",
+    "Χρ. Ιδιότητες & Τρόπος Ζωής": "Ο διορισμένος θα προσπαθήσει να βοηθήσει τον αδελφό να αναπτύξει χριστιανικές ιδιότητες που υπάρχει ανάγκη να βελτιώσει. Μπορεί να γίνει συζύτηση με το πρεσβυτέριο. Ταπεινοφροσύνη, Φιλοπονία, Φιλοξενία, Ζήλος, Πίστη κτλ είναι κάποιες υποψήφιες ιδιότητες.\nΕπίσης θα βοηθήσει σε τομείς βελτίωσης της χριστιανικής ζωής όπως επιλογές σε διασκέδαση, ντύσιμο, διαγωγή, οικ.λατρεία κτλ",
+    "Πν. Στόχοι": "Ο διορισμένος θα βοηθήσει τον αδελφό να θέσει συγκεκριμένους και ρεαλιστικούς πνευματικούς στόχους"
+  }
+};
+
+function normGroup(g){
+  const s=String(g||'').trim();
+  if(/1/.test(s)) return 'Ομάδα 1';
+  if(/2/.test(s)) return 'Ομάδα 2';
+  return s;
+}
+
+function groupBadgeClass(g){
+  const ng=normGroup(g);
+  if(ng==='Ομάδα 1') return 'g1';
+  if(ng==='Ομάδα 2') return 'g2';
+  return 'g-other';
+}
+
+function getAreaComment(group, area){
+  const ng=normGroup(group);
+  return (COMMENTS[ng] && COMMENTS[ng][area]) || (COMMENTS[group] && COMMENTS[group][area]) || '';
+}
+
+const initial=[
+  {"group": "Ομάδα 1", "name": "Χάρτιος Χρήστος", "deadline": "2026-12-31", "items": [["Εργο Κηρύγματος", "Κατρανάς Α."], ["Χρ. Ιδιότητες & Τρόπος Ζωής", "Θεοδωρόπουλος Χ."], ["Πν. Στόχοι", "Τσάκαλος Τ."]]},
+  {"group": "Ομάδα 1", "name": "Χρυσουλάκης Μάνος", "deadline": "2026-12-31", "items": [["Αξιοπιστία", "Λιούτας Δ."], ["Εργο Κηρύγματος", "Μπάκας Α."], ["Πν. Στόχοι", "Τσάκαλος Τ."]]},
+  {"group": "Ομάδα 1", "name": "Κουρούπης Άγγελος", "deadline": "2026-12-31", "items": [["Χρ. Ιδιότητες & Τρόπος Ζωής", "Τραχαντζής Γ."], ["Πν. Στόχοι", "Μιχαηλίδης Γ."]]},
+  {"group": "Ομάδα 1", "name": "Ρουμελιώτης Νάσος", "deadline": "2026-12-31", "items": [["Διδασκαλία", "Κατρανάς Α."], ["Ποίμανση", "Τσάκαλος Τ."]]},
+  {"group": "Ομάδα 2", "name": "Τζάλιας Δημήτρης", "deadline": "2027-01-31", "items": [["Εργο Κηρύγματος", "Κατρανάς Α."]]},
+  {"group": "Ομάδα 2", "name": "Σιδηρόπουλος Κοσμάς", "deadline": "2027-01-31", "items": [["Πν. Στόχοι", "Λιούτας Δ."]]},
+  {"group": "Ομάδα 2", "name": "Κατσώλας Γιώργος", "deadline": "2027-01-31", "items": [["Χρ. Ιδιότητες & Τρόπος Ζωής", "Τσάκαλος Τ."]]},
+  {"group": "Ομάδα 2", "name": "Κατσώλας Δημήτρης", "deadline": "2027-01-31", "items": [["Πν. Στόχοι", "Τσάκαλος Τ."]]},
+  {"group": "Ομάδα 2", "name": "Κοντέλλης Ιωάννης", "deadline": "2027-01-31", "items": [["Χρ. Ιδιότητες & Τρόπος Ζωής", "Μπάκας Α."]]},
+  {"group": "Ομάδα 2", "name": "Μιχαλόπουλος Γιώργος", "deadline": "2027-01-31", "items": [["Εργο Κηρύγματος", "Μπάκας Α."]]}
+];
+
+function hydrateComments(list){
+  return list.map(p=>({...p,items:(p.items||[]).map(it=>{
+    const copy=[...it];
+    const existing=(typeof copy[2]==='object'&&copy[2])?copy[2]:{};
+    const areaComment=getAreaComment(p.group,copy[0]);
+    copy[2]={...existing,areaComment:existing.areaComment||areaComment};
+    return copy;
+  })}));
+}
+
+const KEY='andres_training_app_v1';
+let people=load(),view='trainees',selectedPerson='',selectedTrainer='',activeTraineeTab=0,activeTrainerTab=0;
+function load(){try{const raw=JSON.parse(localStorage.getItem(KEY));return hydrateComments(raw||structuredClone(initial))}catch(e){return hydrateComments(structuredClone(initial))}}
+function save(){localStorage.setItem(KEY,JSON.stringify(people))}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function allItems(){return people.flatMap(p=>p.items.map((it,i)=>({p,it,i})))}
+function meta(it){return (typeof it[2]==='object'&&it[2])?it[2]:{}}
+function state(it,p){const m=meta(it);if(m.status==='Ολοκληρώθηκε')return m.completed&&m.completed<=p.deadline?'done':'late';if(m.status==='Σε εξέλιξη')return 'progress';return 'pending'}
+function badge(it,p){const m=meta(it);let s=state(it,p);return s==='done'?'Εμπρόθεσμα':s==='late'?'Εκπρόθεσμα':m.status||'Εκκρεμεί'}
+function statusSelectClass(st){if(st==='Σε εξέλιξη')return 'status-progress';if(st==='Ολοκληρώθηκε')return 'status-done';return 'status-pending'}
+function stats(){let a=allItems(),done=a.filter(x=>meta(x.it).status==='Ολοκληρώθηκε').length,ontime=a.filter(x=>meta(x.it).status==='Ολοκληρώθηκε'&&meta(x.it).completed&&meta(x.it).completed<=x.p.deadline).length;
+document.getElementById('stats').innerHTML=`<div class="stat"><b>${people.length}</b><span>Εκπαιδευόμενοι</span></div><div class="stat"><b>${done}/${a.length}</b><span>Ολοκληρωμένοι τομείς</span></div><div class="stat"><b>${ontime}</b><span>Εμπρόθεσμοι</span></div>`}
+
+function groupBadgeHTML(group){
+  const ng=normGroup(group)||group;
+  return `<span class="group-badge ${groupBadgeClass(group)}" data-group-filter="${esc(ng)}" title="Φιλτράρισμα σε ${esc(ng)}">${esc(ng)}</span>`;
+}
+
+function syncSelectors(list,trainerNames){
+  const pSel=document.getElementById('personSelect');
+  const tSel=document.getElementById('trainerSelect');
+  const gSel=document.getElementById('group');
+  const curG=normGroup(gSel.value);
+  if(curG!==gSel.value) gSel.value=curG;
+
+  if(view==='trainees'){
+    pSel.style.display='';
+    tSel.style.display='none';
+    if(selectedPerson && !list.some(p=>p.name===selectedPerson)) selectedPerson='';
+    pSel.innerHTML=['<option value="">-- Επίλεξε εκπαιδευόμενο --</option>']
+      .concat(list.map(p=>`<option value="${esc(p.name)}"${p.name===selectedPerson?' selected':''}>${esc(p.name)} (${esc(normGroup(p.group))})</option>`)).join('');
+  }else{
+    pSel.style.display='none';
+    tSel.style.display='';
+    if(selectedTrainer && !trainerNames.includes(selectedTrainer)) selectedTrainer='';
+    tSel.innerHTML=['<option value="">-- Επίλεξε εκπαιδευτή --</option>']
+      .concat(trainerNames.map(name=>`<option value="${esc(name)}"${name===selectedTrainer?' selected':''}>${esc(name)}</option>`)).join('');
+  }
+}
+
+function render(){
+  stats();
+  let q=document.getElementById('search').value.toLocaleLowerCase('el');
+  let g=normGroup(document.getElementById('group').value);
+  let sf=document.getElementById('statusFilter').value;
+  let html='';
+
+  if(view==='trainees'){
+    let list=people.filter(p=>(!g||normGroup(p.group)===g)&&(!q||(p.name+' '+p.items.map(x=>x[0]+' '+x[1]+' '+(meta(x).areaComment||'')).join(' ')).toLocaleLowerCase('el').includes(q))&&(!sf||p.items.some(x=>(meta(x).status||'Εκκρεμεί')===sf)));
+    syncSelectors(list,[]);
+    if(!list.length){
+      html='<div class="empty">Δεν βρέθηκαν εκπαιδευόμενοι με αυτά τα κριτήρια.</div>';
+    }else if(!selectedPerson){
+      html='<div class="empty">Επίλεξε έναν εκπαιδευόμενο από τη λίστα παραπάνω για να δεις τα στοιχεία και την πρόοδό του.</div>';
+    }else{
+      let p=list.find(x=>x.name===selectedPerson);
+      let visibleItems=p.items.map((it,i)=>({it,i})).filter(x=>!sf||((meta(x.it).status||'Εκκρεμεί')===sf));
+      if(!visibleItems.length) visibleItems=p.items.map((it,i)=>({it,i}));
+      if(activeTraineeTab>=visibleItems.length) activeTraineeTab=0;
+      const current=visibleItems[activeTraineeTab];
+      const tabButtons=visibleItems.map((x,idx)=>`<button type="button" class="subtab${idx===activeTraineeTab?' active':''}" data-subtab="trainee" data-idx="${idx}"><span class="dot ${state(x.it,p)}"></span>${esc(x.it[0])}</button>`).join('');
+      html=`<section class="person">
+        <div class="personhead">
+          <div><h3>${esc(p.name)}</h3><div class="sub">${groupBadgeHTML(p.group)} · Προθεσμία: ${new Date(p.deadline+'T12:00:00').toLocaleDateString('el-GR')}</div></div>
+          <span class="pill">${p.items.filter(x=>meta(x).status==='Ολοκληρώθηκε').length}/${p.items.length} τομείς</span>
+        </div>
+        <div class="subtabs" role="tablist" aria-label="Τομείς εκπαίδευσης">${tabButtons}</div>
+        ${itemHTML(p,current.it,current.i,false)}
+      </section>`;
+    }
+  }
+  else{
+    let names=[...new Set(allItems().map(x=>x.it[1]))].sort((a,b)=>a.localeCompare(b,'el'));
+    let availableNames=names.filter(name=>allItems().some(x=>x.it[1]===name&&(!g||normGroup(x.p.group)===g)&&(!q||(name+' '+x.p.name+' '+x.it[0]+' '+(meta(x.it).areaComment||'')).toLocaleLowerCase('el').includes(q))&&(!sf||(meta(x.it).status||'Εκκρεμεί')===sf)));
+    syncSelectors([],availableNames);
+    if(!availableNames.length){
+      html='<div class="empty">Δεν βρέθηκαν εκπαιδευτές με αυτά τα κριτήρια.</div>';
+    }else if(!selectedTrainer){
+      html='<div class="empty">Επίλεξε έναν εκπαιδευτή από τη λίστα παραπάνω για να δεις τις αναθέσεις του.</div>';
+    }else{
+      let rows=allItems().filter(x=>x.it[1]===selectedTrainer&&(!g||normGroup(x.p.group)===g)&&(!q||(selectedTrainer+' '+x.p.name+' '+x.it[0]+' '+(meta(x.it).areaComment||'')).toLocaleLowerCase('el').includes(q))&&(!sf||(meta(x.it).status||'Εκκρεμεί')===sf));
+      if(activeTrainerTab>=rows.length) activeTrainerTab=0;
+      const curRow=rows[activeTrainerTab];
+      const trainerTabs=rows.map((x,idx)=>`<button type="button" class="subtab${idx===activeTrainerTab?' active':''}" data-subtab="trainer" data-idx="${idx}"><span class="dot ${state(x.it,x.p)}"></span><span>${esc(x.p.name)} · ${esc(x.it[0])}</span></button>`).join('');
+      html=`<h2 class="sectiontitle">${esc(selectedTrainer)} · ${rows.length} αναθέσεις</h2>
+      <section class="person">
+        <div class="personhead">
+          <div><h3>${esc(curRow.p.name)}</h3><div class="sub">${groupBadgeHTML(curRow.p.group)} · Τομέας: ${esc(curRow.it[0])}</div></div>
+          <span class="pill ${state(curRow.it,curRow.p)}">${badge(curRow.it,curRow.p)}</span>
+        </div>
+        <div class="subtabs" role="tablist" aria-label="Αναθέσεις εκπαιδευτή">${trainerTabs}</div>
+        ${itemHTML(curRow.p,curRow.it,curRow.i,true)}
+      </section>`;
+    }
+  }
+  document.getElementById('content').innerHTML=html;
+}
+
+function itemHTML(p,it,i,showGroupBadge){
+  const m=meta(it);
+  const st=m.status||'Εκκρεμεί';
+  const areaComment=m.areaComment||getAreaComment(p.group,it[0]);
+  return `<div class="item">
+    <div class="itemtop"><strong>${esc(it[0])}</strong><span class="pill ${state(it,p)}">${badge(it,p)}</span></div>
+    <div class="trainer"><span>Εκπαιδευτής: ${esc(it[1])}</span>${showGroupBadge?groupBadgeHTML(p.group):''}</div>
+    ${areaComment?`<div class="area-note"><div class="area-note-title">Οδηγίες / Σχόλιο τομέα</div>${esc(areaComment)}</div>`:''}
+    <div class="fields">
+      <label>Κατάσταση<select class="${statusSelectClass(st)}" data-p="${people.indexOf(p)}" data-i="${i}" data-k="status"><option ${st==='Εκκρεμεί'?'selected':''}>Εκκρεμεί</option><option ${st==='Σε εξέλιξη'?'selected':''}>Σε εξέλιξη</option><option ${st==='Ολοκληρώθηκε'?'selected':''}>Ολοκληρώθηκε</option></select></label>
+      <label>Ημερομηνία εξέτασης<input type="date" data-p="${people.indexOf(p)}" data-i="${i}" data-k="exam" value="${esc(m.exam||'')}"></label>
+      <label>Ημερομηνία ολοκλήρωσης<input type="date" data-p="${people.indexOf(p)}" data-i="${i}" data-k="completed" value="${esc(m.completed||'')}"></label>
+      <label>Σχόλια<input data-p="${people.indexOf(p)}" data-i="${i}" data-k="notes" value="${esc(m.notes||'')}" placeholder="Προαιρετικά"></label>
+    </div>
+  </div>`;
+}
+
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{view=b.dataset.view;document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('active',x===b));render()});
+document.getElementById('personSelect').addEventListener('change',e=>{selectedPerson=e.target.value;activeTraineeTab=0;render()});
+document.getElementById('trainerSelect').addEventListener('change',e=>{selectedTrainer=e.target.value;activeTrainerTab=0;render()});
+['search','group','statusFilter'].forEach(id=>document.getElementById(id).addEventListener(id==='search'?'input':'change',()=>{activeTraineeTab=0;activeTrainerTab=0;render()}));
+
+document.getElementById('content').addEventListener('click',e=>{
+  const badgeEl=e.target.closest('[data-group-filter]');
+  if(badgeEl){
+    const chosenGroup=badgeEl.dataset.groupFilter;
+    const gSel=document.getElementById('group');
+    gSel.value=(normGroup(gSel.value)===chosenGroup)?'':chosenGroup;
+    activeTraineeTab=0;
+    activeTrainerTab=0;
+    render();
+    return;
+  }
+  const tabBtn=e.target.closest('[data-subtab]');
+  if(tabBtn){
+    const idx=+tabBtn.dataset.idx;
+    if(tabBtn.dataset.subtab==='trainee') activeTraineeTab=idx;
+    if(tabBtn.dataset.subtab==='trainer') activeTrainerTab=idx;
+    render();
+  }
+});
+
+document.getElementById('content').addEventListener('change',e=>{
+  let t=e.target;if(!t.dataset.p)return;
+  let p=people[+t.dataset.p],it=p.items[+t.dataset.i];
+  if(typeof it[2]!=='object'||!it[2])it[2]={areaComment:getAreaComment(p.group,it[0])};
+  let m=it[2],k=t.dataset.k;
+  if(k==='status'){
+    m.status=t.value;
+    if(t.value==='Ολοκληρώθηκε'&&!m.completed)m.completed=new Date().toISOString().slice(0,10);
+    if(t.value!=='Ολοκληρώθηκε')m.completed='';
+  }else m[k]=t.value;
+  save();render();
+});
+
+document.getElementById('export').onclick=()=>{let blob=new Blob([JSON.stringify(people,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='antres-backup.json';a.click();URL.revokeObjectURL(a.href)};
+document.getElementById('import').onclick=()=>document.getElementById('file').click();
+document.getElementById('file').onchange=async e=>{try{let x=JSON.parse(await e.target.files[0].text());if(!Array.isArray(x))throw 0;people=hydrateComments(x);save();render();alert('Το αντίγραφο εισήχθη.')}catch(err){alert('Το αρχείο δεν είναι έγκυρο αντίγραφο.')}};
+document.getElementById('reset').onclick=()=>{if(confirm('Να διαγραφούν οι αλλαγές και να επανέλθουν τα αρχικά δεδομένα;')){people=hydrateComments(structuredClone(initial));save();render()}};
+render();
+</script></body></html>
