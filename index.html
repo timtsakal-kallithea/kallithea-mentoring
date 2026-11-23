@@ -5,6 +5,7 @@
 :root{--ink:#172b28;--muted:#687873;--bg:#f3f6f4;--card:#fff;--green:#1d6254;--line:#e1e9e5;--amber:#a86510;--red:#b33d36}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,sans-serif}
 header{background:#173b36;color:white;padding:22px 18px 18px}header h1{font-size:21px;margin:0 0 5px}header p{margin:0;color:#d4e5df;font-size:13px}
+.syncbar{margin-top:8px;font-size:12px;color:#cde3dc;display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);padding:4px 10px;border-radius:999px}
 main{max-width:900px;margin:auto;padding:15px}.tabs{display:flex;gap:8px;margin:0 0 14px}.tabs button,.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:650;background:#e3ece7;color:#21483f}.tabs button.active,.btn.primary{background:var(--green);color:white}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}.stat{background:white;padding:13px;border-radius:14px;border:1px solid var(--line)}.stat b{font-size:22px;display:block}.stat span{font-size:12px;color:var(--muted)}
 .controls{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.controls input,.controls select{flex:1;min-width:130px;padding:11px;border:1px solid var(--line);border-radius:11px;background:white;font:inherit}
@@ -46,7 +47,11 @@ main{max-width:900px;margin:auto;padding:15px}.tabs{display:flex;gap:8px;margin:
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.btn{font-size:13px;cursor:pointer}.note{font-size:12px;color:var(--muted);line-height:1.5;margin:14px 2px}
 @media(max-width:480px){main{padding:12px}.stats{gap:6px}.stat{padding:10px}.stat b{font-size:19px}.fields{grid-template-columns:1fr 1fr}.person{padding:12px}}
 </style></head><body>
-<header><h1>Πρόγραμμα Εκπαίδευσης Ανδρών</h1><p>Καλλιθέα · 2026–2027 · Παρακολούθηση προόδου και εξετάσεων</p></header>
+<header>
+  <h1>Πρόγραμμα Εκπαίδευσης Ανδρών</h1>
+  <p>Καλλιθέα · 2026–2027 · Παρακολούθηση προόδου και εξετάσεων</p>
+  <div class="syncbar" id="syncStatus">Σύνδεση με Supabase...</div>
+</header>
 <main><div class="tabs"><button class="active" data-view="trainees">Εκπαιδευόμενοι</button><button data-view="trainers">Εκπαιδευτές</button></div>
 <div class="stats" id="stats"></div>
 <div class="controls">
@@ -57,9 +62,14 @@ main{max-width:900px;margin:auto;padding:15px}.tabs{display:flex;gap:8px;margin:
   <select id="statusFilter"><option value="">Όλες οι καταστάσεις</option><option value="Εκκρεμεί">Εκκρεμεί</option><option value="Σε εξέλιξη">Σε εξέλιξη</option><option value="Ολοκληρώθηκε">Ολοκληρώθηκε</option></select>
 </div>
 <div id="content"></div><div class="actions"><button class="btn primary" id="export">Εξαγωγή αντιγράφου</button><button class="btn" id="import">Εισαγωγή αντιγράφου</button><button class="btn" id="reset">Επαναφορά αρχικών</button><input id="file" type="file" accept="application/json" hidden></div>
-<p class="note">Οι αλλαγές αποθηκεύονται σε αυτή τη συσκευή και σε αυτόν τον browser. Για κοινή χρήση μεταξύ πολλών κινητών/εκπαιδευτών χρειάζεται σύνδεση σε κοινή online βάση δεδομένων. Κάνε τακτικά «Εξαγωγή αντιγράφου» για backup.</p>
+<p class="note">Οι αλλαγές συγχρονίζονται κεντρικά μέσω Supabase και κρατούνται και τοπικά ως εφεδρικό αντίγραφο. Κάνε τακτικά «Εξαγωγή αντιγράφου» για backup.</p>
 </main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL = "https://fopmvvcuntmrpgutfcuf.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_R-Q_e5YnHFxs09e_rVuriA_DEOCAgbg";
+
 const COMMENTS = {
   "Ομάδα 1": {
     "Αξιοπιστία": "Ο διορισμένος θα βοηθήσει τον αδελφό να είναι πιο αξιόπιστος στην εκπλήρωση των διορισμών του. Θα αφιερώσει χρόνο τουλάχιστον μια φορά το 2μηνο για να μιλήσουν, να εντοπίσουν τους λόγους που τον εμποδίζουν να είναι αξιόπιστος και να προτείνει λύσεις.",
@@ -83,14 +93,12 @@ function normGroup(g){
   if(/2/.test(s)) return 'Ομάδα 2';
   return s;
 }
-
 function groupBadgeClass(g){
   const ng=normGroup(g);
   if(ng==='Ομάδα 1') return 'g1';
   if(ng==='Ομάδα 2') return 'g2';
   return 'g-other';
 }
-
 function getAreaComment(group, area){
   const ng=normGroup(group);
   return (COMMENTS[ng] && COMMENTS[ng][area]) || (COMMENTS[group] && COMMENTS[group][area]) || '';
@@ -120,9 +128,71 @@ function hydrateComments(list){
 }
 
 const KEY='andres_training_app_v1';
-let people=load(),view='trainees',selectedPerson='',selectedTrainer='',activeTraineeTab=0,activeTrainerTab=0;
-function load(){try{const raw=JSON.parse(localStorage.getItem(KEY));return hydrateComments(raw||structuredClone(initial))}catch(e){return hydrateComments(structuredClone(initial))}}
-function save(){localStorage.setItem(KEY,JSON.stringify(people))}
+let people=loadLocal(),view='trainees',selectedPerson='',selectedTrainer='',activeTraineeTab=0,activeTrainerTab=0;
+let sb=(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase)?window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null;
+
+function setSyncStatus(msg){document.getElementById('syncStatus').textContent=msg;}
+function loadLocal(){try{const raw=JSON.parse(localStorage.getItem(KEY));return hydrateComments(raw||structuredClone(initial))}catch(e){return hydrateComments(structuredClone(initial))}}
+function saveLocal(){localStorage.setItem(KEY,JSON.stringify(people))}
+
+async function savePersonToCloud(p){
+  saveLocal();
+  if(!sb) return;
+  setSyncStatus('Αποθήκευση στη βάση...');
+  const {error}=await sb.from('trainees_data').upsert({
+    trainee_name: p.name,
+    group_name: normGroup(p.group),
+    record: p,
+    updated_at: new Date().toISOString()
+  },{onConflict:'trainee_name'});
+  if(error){console.error(error);setSyncStatus('Σφάλμα αποθήκευσης: '+(error.message||''));}
+  else setSyncStatus('Συγχρονισμένο με Supabase');
+}
+
+async function saveAllToCloud(){
+  saveLocal();
+  if(!sb) return;
+  setSyncStatus('Συγχρονισμός όλων των εγγραφών...');
+  const rows=people.map(p=>({
+    trainee_name: p.name,
+    group_name: normGroup(p.group),
+    record: p,
+    updated_at: new Date().toISOString()
+  }));
+  const {error}=await sb.from('trainees_data').upsert(rows,{onConflict:'trainee_name'});
+  if(error){console.error(error);setSyncStatus('Σφάλμα συγχρονισμού: '+(error.message||''));}
+  else setSyncStatus('Συγχρονισμένο με Supabase');
+}
+
+async function initCloudSync(){
+  if(!sb){setSyncStatus('Τοπική αποθήκευση (δεν έχει ρυθμιστεί Supabase)');return;}
+  setSyncStatus('Σύνδεση με Supabase...');
+  const {data,error}=await sb.from('trainees_data').select('trainee_name,record');
+  if(error){console.error(error);setSyncStatus('Σφάλμα σύνδεσης με βάση: '+(error.message||''));return;}
+  if(!data || data.length===0){
+    await saveAllToCloud();
+  }else{
+    const map=new Map(data.map(r=>[r.trainee_name,r.record]));
+    const merged=hydrateComments(structuredClone(initial)).map(p=>map.has(p.name)?hydrateComments([map.get(p.name)])[0]:p);
+    people=merged;
+    saveLocal();
+    render();
+    setSyncStatus('Συγχρονισμένο με Supabase');
+  }
+  sb.channel('trainees-live')
+    .on('postgres_changes',{event:'*',schema:'public',table:'trainees_data'},payload=>{
+      const rec=payload.new && payload.new.record;
+      if(!rec || !rec.name) return;
+      const idx=people.findIndex(x=>x.name===rec.name);
+      const hydrated=hydrateComments([rec])[0];
+      if(idx>=0) people[idx]=hydrated;
+      saveLocal();
+      render();
+      setSyncStatus('Ενημερώθηκε ζωντανά από βάση');
+    })
+    .subscribe();
+}
+
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function allItems(){return people.flatMap(p=>p.items.map((it,i)=>({p,it,i})))}
 function meta(it){return (typeof it[2]==='object'&&it[2])?it[2]:{}}
@@ -259,7 +329,7 @@ document.getElementById('content').addEventListener('click',e=>{
   }
 });
 
-document.getElementById('content').addEventListener('change',e=>{
+document.getElementById('content').addEventListener('change',async e=>{
   let t=e.target;if(!t.dataset.p)return;
   let p=people[+t.dataset.p],it=p.items[+t.dataset.i];
   if(typeof it[2]!=='object'||!it[2])it[2]={areaComment:getAreaComment(p.group,it[0])};
@@ -269,12 +339,15 @@ document.getElementById('content').addEventListener('change',e=>{
     if(t.value==='Ολοκληρώθηκε'&&!m.completed)m.completed=new Date().toISOString().slice(0,10);
     if(t.value!=='Ολοκληρώθηκε')m.completed='';
   }else m[k]=t.value;
-  save();render();
+  render();
+  await savePersonToCloud(p);
 });
 
 document.getElementById('export').onclick=()=>{let blob=new Blob([JSON.stringify(people,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='antres-backup.json';a.click();URL.revokeObjectURL(a.href)};
 document.getElementById('import').onclick=()=>document.getElementById('file').click();
-document.getElementById('file').onchange=async e=>{try{let x=JSON.parse(await e.target.files[0].text());if(!Array.isArray(x))throw 0;people=hydrateComments(x);save();render();alert('Το αντίγραφο εισήχθη.')}catch(err){alert('Το αρχείο δεν είναι έγκυρο αντίγραφο.')}};
-document.getElementById('reset').onclick=()=>{if(confirm('Να διαγραφούν οι αλλαγές και να επανέλθουν τα αρχικά δεδομένα;')){people=hydrateComments(structuredClone(initial));save();render()}};
+document.getElementById('file').onchange=async e=>{try{let x=JSON.parse(await e.target.files[0].text());if(!Array.isArray(x))throw 0;people=hydrateComments(x);render();await saveAllToCloud();alert('Το αντίγραφο εισήχθη.')}catch(err){alert('Το αρχείο δεν είναι έγκυρο αντίγραφο.')}};
+document.getElementById('reset').onclick=async()=>{if(confirm('Να διαγραφούν οι αλλαγές και να επανέλθουν τα αρχικά δεδομένα;')){people=hydrateComments(structuredClone(initial));render();await saveAllToCloud()}};
+
 render();
+initCloudSync();
 </script></body></html>
