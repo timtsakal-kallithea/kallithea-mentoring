@@ -153,7 +153,6 @@ main{max-width:920px;margin:auto;padding:16px}
   <div class="actions">
     <button class="btn primary" id="export">Εξαγωγή αντιγράφου</button>
     <button class="btn" id="import">Εισαγωγή αντιγράφου</button>
-    <button class="btn" id="reset">Επαναφορά αρχικών</button>
     <input id="file" type="file" accept="application/json" hidden>
   </div>
 
@@ -566,11 +565,6 @@ document.getElementById('file').onchange=async e=>{
     people=hydrateComments(x);render();await saveAllToCloud();
     alert('Το αντίγραφο εισήχθη.');
   }catch(err){alert('Το αρχείο δεν είναι έγκυρο αντίγραφο.')}
-};
-document.getElementById('reset').onclick=async()=>{
-  if(confirm('Να διαγραφούν οι αλλαγές και να επανέλθουν τα αρχικά δεδομένα;')){
-    people=hydrateComments(structuredClone(initial));render();await saveAllToCloud();
-  }
 };
 
 render();
