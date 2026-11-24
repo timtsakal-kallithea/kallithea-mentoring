@@ -2,67 +2,162 @@
 <html lang="el"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#173b36"><title>Πρόγραμμα Εκπαίδευσης Ανδρών</title>
 <style>
-:root{--ink:#172b28;--muted:#687873;--bg:#f3f6f4;--card:#fff;--green:#1d6254;--line:#e1e9e5;--amber:#a86510;--red:#b33d36}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,sans-serif}
-header{background:#173b36;color:white;padding:22px 18px 18px}header h1{font-size:21px;margin:0 0 5px}header p{margin:0;color:#d4e5df;font-size:13px}
-.syncbar{margin-top:8px;font-size:12px;color:#cde3dc;display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);padding:4px 10px;border-radius:999px}
-main{max-width:900px;margin:auto;padding:15px}.tabs{display:flex;gap:8px;margin:0 0 14px}.tabs button,.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:650;background:#e3ece7;color:#21483f}.tabs button.active,.btn.primary{background:var(--green);color:white}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}.stat{background:white;padding:13px;border-radius:14px;border:1px solid var(--line)}.stat b{font-size:22px;display:block}.stat span{font-size:12px;color:var(--muted)}
-.controls{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.controls input,.controls select{flex:1;min-width:130px;padding:11px;border:1px solid var(--line);border-radius:11px;background:white;font:inherit}
-.person{background:white;border:1px solid var(--line);border-radius:15px;margin:10px 0;padding:14px}.personhead{display:flex;justify-content:space-between;gap:10px;align-items:start;flex-wrap:wrap}.person h3{margin:0 0 3px;font-size:16px}.sub{font-size:12px;color:var(--muted)}
+:root{--ink:#172b28;--muted:#586964;--bg:#f3f6f4;--card:#fff;--green:#1d6254;--line:#dce5e0;--amber:#a86510;--red:#b33d36}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+header{background:#173b36;color:white;padding:22px 18px 20px}
+.brand-row{display:flex;align-items:center;gap:12px}
+.jw-logo{
+  width:46px;height:46px;border-radius:12px;
+  background:linear-gradient(135deg,#278370,#122d29);
+  border:1.5px solid rgba(255,255,255,.32);
+  display:inline-flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:17px;letter-spacing:.8px;color:#fff;
+  box-shadow:0 3px 10px rgba(0,0,0,.22);flex:0 0 auto
+}
+header h1{font-size:23px;line-height:1.25;margin:0 0 4px}
+header p{margin:0;color:#d4e5df;font-size:15px}
+.syncbar{margin-top:10px;font-size:14px;color:#e4f3ee;display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.14);padding:6px 12px;border-radius:999px;font-weight:600}
 
-.pill{font-size:11px;border-radius:20px;padding:5px 9px;background:#edf2ef;color:#475852;white-space:nowrap;font-weight:600}
-.pill.pending{background:#eef1f4;color:#52606d;border:1px solid #d5dde4}
+.saved-disclaimer{
+  display:none;margin:12px 0;padding:12px 15px;border-radius:13px;
+  background:#e3f5eb;border:1px solid #8fd4ae;color:#114b2d;
+  font-size:15.5px;font-weight:650;align-items:center;justify-content:space-between;gap:10px
+}
+.saved-disclaimer.show{display:flex;flex-wrap:wrap}
+.saved-disclaimer small{font-size:13.5px;font-weight:500;color:#1e633f}
+
+main{max-width:920px;margin:auto;padding:16px}
+.tabs{display:flex;gap:10px;margin:0 0 14px}
+.tabs button,.btn{border:0;border-radius:13px;padding:13px 16px;font-weight:700;font-size:16px;background:#e3ece7;color:#21483f;cursor:pointer}
+.tabs button.active,.btn.primary{background:var(--green);color:white}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat{background:white;padding:14px;border-radius:14px;border:1px solid var(--line)}
+.stat b{font-size:24px;display:block;line-height:1.2}
+.stat span{font-size:14px;color:var(--muted)}
+
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.controls select{flex:1;min-width:170px;padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--ink);font:600 16px/1.3 system-ui}
+
+.person{background:white;border:1px solid var(--line);border-radius:16px;margin:14px 0;padding:16px}
+.personhead{display:flex;justify-content:space-between;gap:12px;align-items:start;flex-wrap:wrap}
+.person h3{margin:0 0 6px;font-size:19px}
+.sub{font-size:14.5px;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+.head-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.report-btn{
+  border:1.5px solid var(--green);background:var(--green);color:#fff;
+  border-radius:11px;padding:9px 14px;font-size:15px;font-weight:700;cursor:pointer
+}
+.report-btn:disabled{
+  background:#eef2f0;border-color:#cbd5e1;color:#8a9994;cursor:not-allowed
+}
+
+.pill{font-size:13.5px;border-radius:20px;padding:6px 11px;background:#edf2ef;color:#475852;white-space:nowrap;font-weight:650}
+.pill.pending{background:#eef1f4;color:#475569;border:1px solid #cbd5e1}
 .pill.done{background:#e1f3e9;color:#17633c;border:1px solid #b6e3ca}
 .pill.late{background:#fae8e6;color:#a52e28;border:1px solid #f0c2bd}
 .pill.progress{background:#fff3cd;color:#8a5a00;border:1px solid #f7df88}
 
-.group-badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:999px;cursor:pointer;border:1px solid transparent;transition:transform .12s ease,box-shadow .12s ease;user-select:none}
-.group-badge:hover{transform:translateY(-1px);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.group-badge{display:inline-flex;align-items:center;gap:5px;font-size:13.5px;font-weight:700;padding:5px 11px;border-radius:999px;cursor:pointer;border:1px solid transparent;user-select:none}
 .group-badge.g1{background:#e0f2fe;color:#075985;border-color:#7dd3fc}
 .group-badge.g2{background:#f3e8ff;color:#6b21a8;border-color:#d8b4fe}
 .group-badge.g-other{background:#f1f5f9;color:#334155;border-color:#cbd5e1}
 
-.subtabs{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
-.subtab{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#f7faf8;color:#274039;border-radius:11px;padding:8px 12px;font-size:12.5px;font-weight:650;cursor:pointer;text-align:left}
+.subtabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.subtab{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:#f7faf8;color:#274039;border-radius:12px;padding:10px 14px;font-size:15px;font-weight:650;cursor:pointer;text-align:left}
 .subtab.active{background:var(--green);color:#fff;border-color:var(--green)}
-.subtab .dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;background:#94a3b8}
+.subtab .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto;background:#94a3b8}
 .subtab.active .dot{background:#d1fae5}
 .subtab .dot.progress{background:#eab308}
 .subtab .dot.done{background:#16a34a}
 .subtab .dot.late{background:#dc2626}
 
-.item{border-top:1px solid var(--line);padding:12px 0 2px;margin-top:12px}.itemtop{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}.item strong{font-size:14.5px}.trainer{font-size:12.5px;color:var(--muted);margin-top:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.item{border-top:1px solid var(--line);padding:14px 0 4px;margin-top:14px}
+.itemtop{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.item strong{font-size:17px}
+.trainer{font-size:15px;color:var(--muted);margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 
-.area-note{margin-top:9px;padding:10px 12px;background:#f4f8f6;border-left:3px solid var(--green);border-radius:8px;font-size:12.5px;line-height:1.48;color:#233b35;white-space:pre-line}
-.area-note-title{font-weight:700;color:var(--green);margin-bottom:3px;font-size:11.5px;letter-spacing:.2px}
+.area-note{margin-top:11px;padding:12px 14px;background:#f4f8f6;border-left:4px solid var(--green);border-radius:9px;font-size:15px;line-height:1.55;color:#233b35;white-space:pre-line}
+.area-note-title{font-weight:700;color:var(--green);margin-bottom:4px;font-size:13.5px;letter-spacing:.2px}
 
-.fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.fields label{font-size:11px;color:var(--muted)}.fields select,.fields input,.fields textarea{display:block;width:100%;margin-top:4px;padding:9px;border:1px solid var(--line);border-radius:9px;background:white;color:var(--ink);font:13px system-ui}.fields textarea{min-height:38px;resize:vertical}.wide{grid-column:1/-1}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.fields label{font-size:14px;font-weight:600;color:var(--muted)}
+.fields select,.fields input{display:block;width:100%;margin-top:5px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:white;color:var(--ink);font:16px/1.35 system-ui}
 
 .fields select.status-pending{background:#f5f7f9;border-color:#cbd5e1;color:#475569}
-.fields select.status-progress{background:#fff8db;border-color:#f2d04e;color:#7c4d00;font-weight:600}
-.fields select.status-done{background:#eaf8f0;border-color:#86efac;color:#14532d;font-weight:600}
+.fields select.status-progress{background:#fff8db;border-color:#f2d04e;color:#7c4d00;font-weight:700}
+.fields select.status-done{background:#eaf8f0;border-color:#86efac;color:#14532d;font-weight:700}
 
-.sectiontitle{font-size:14px;margin:18px 0 6px;color:#38564e}.empty{padding:25px;text-align:center;color:var(--muted)}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.btn{font-size:13px;cursor:pointer}.note{font-size:12px;color:var(--muted);line-height:1.5;margin:14px 2px}
-@media(max-width:480px){main{padding:12px}.stats{gap:6px}.stat{padding:10px}.stat b{font-size:19px}.fields{grid-template-columns:1fr 1fr}.person{padding:12px}}
+.sectiontitle{font-size:18px;margin:20px 0 8px;color:#23423a}
+.empty{padding:28px 18px;text-align:center;color:var(--muted);font-size:16.5px;background:white;border:1px dashed var(--line);border-radius:14px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.note{font-size:14px;color:var(--muted);line-height:1.55;margin:14px 2px}
+
+@media(max-width:600px){
+  body{font-size:17.5px}
+  main{padding:12px}
+  .stats{grid-template-columns:1fr;gap:8px}
+  .fields{grid-template-columns:1fr}
+  .person{padding:14px}
+  .controls select{min-width:100%}
+}
 </style></head><body>
 <header>
-  <h1>Πρόγραμμα Εκπαίδευσης Ανδρών</h1>
-  <p>Καλλιθέα · 2026–2027 · Παρακολούθηση προόδου και εξετάσεων</p>
+  <div class="brand-row">
+    <div class="jw-logo" aria-label="Λογότυπο JW">JW</div>
+    <div>
+      <h1>Πρόγραμμα Εκπαίδευσης Ανδρών</h1>
+      <p>Καλλιθέα · 2026–2027 · Παρακολούθηση προόδου και διορισμών</p>
+    </div>
+  </div>
   <div class="syncbar" id="syncStatus">Σύνδεση με Supabase...</div>
 </header>
-<main><div class="tabs"><button class="active" data-view="trainees">Εκπαιδευόμενοι</button><button data-view="trainers">Εκπαιδευτές</button></div>
-<div class="stats" id="stats"></div>
-<div class="controls">
-  <select id="personSelect" aria-label="Επιλογή εκπαιδευόμενου"><option value="">-- Επίλεξε εκπαιδευόμενο --</option></select>
-  <select id="trainerSelect" aria-label="Επιλογή εκπαιδευτή" style="display:none"><option value="">-- Επίλεξε εκπαιδευτή --</option></select>
-  <input id="search" placeholder="Αναζήτηση ονόματος ή τομέα">
-  <select id="group"><option value="">Όλες οι ομάδες</option><option value="Ομάδα 1">Ομάδα 1</option><option value="Ομάδα 2">Ομάδα 2</option></select>
-  <select id="statusFilter"><option value="">Όλες οι καταστάσεις</option><option value="Εκκρεμεί">Εκκρεμεί</option><option value="Σε εξέλιξη">Σε εξέλιξη</option><option value="Ολοκληρώθηκε">Ολοκληρώθηκε</option></select>
-</div>
-<div id="content"></div><div class="actions"><button class="btn primary" id="export">Εξαγωγή αντιγράφου</button><button class="btn" id="import">Εισαγωγή αντιγράφου</button><button class="btn" id="reset">Επαναφορά αρχικών</button><input id="file" type="file" accept="application/json" hidden></div>
-<p class="note">Οι αλλαγές συγχρονίζονται κεντρικά μέσω Supabase και κρατούνται και τοπικά ως εφεδρικό αντίγραφο. Κάνε τακτικά «Εξαγωγή αντιγράφου» για backup.</p>
+
+<main>
+  <div class="saved-disclaimer" id="savedDisclaimer" role="status" aria-live="polite">
+    <span id="savedDisclaimerText">✓ Οι αλλαγές έχουν αποθηκευτεί.</span>
+    <small id="savedDisclaimerMeta">Αυτόματη ενημέρωση κατάστασης αποθήκευσης</small>
+  </div>
+
+  <div class="tabs">
+    <button class="active" data-view="trainees">Εκπαιδευόμενοι</button>
+    <button data-view="trainers">Εκπαιδευτές</button>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls">
+    <select id="personSelect" aria-label="Επιλογή εκπαιδευόμενου">
+      <option value="ΟΛΟΙ">ΟΛΟΙ</option>
+    </select>
+    <select id="trainerSelect" aria-label="Επιλογή εκπαιδευτή" style="display:none">
+      <option value="ΟΛΟΙ">ΟΛΟΙ</option>
+    </select>
+    <select id="group" aria-label="Επιλογή ομάδας">
+      <option value="">Όλες οι ομάδες</option>
+      <option value="Ομάδα 1">Ομάδα 1</option>
+      <option value="Ομάδα 2">Ομάδα 2</option>
+    </select>
+    <select id="statusFilter" aria-label="Επιλογή κατάστασης">
+      <option value="">Όλες οι καταστάσεις</option>
+      <option value="Εκκρεμεί">Εκκρεμεί</option>
+      <option value="Σε εξέλιξη">Σε εξέλιξη</option>
+      <option value="Ολοκληρώθηκε">Ολοκληρώθηκε</option>
+    </select>
+  </div>
+
+  <div id="content"></div>
+
+  <div class="actions">
+    <button class="btn primary" id="export">Εξαγωγή αντιγράφου</button>
+    <button class="btn" id="import">Εισαγωγή αντιγράφου</button>
+    <button class="btn" id="reset">Επαναφορά αρχικών</button>
+    <input id="file" type="file" accept="application/json" hidden>
+  </div>
+
+  <p class="note">Υπενθύμιση: Κάθε αλλαγή αποθηκεύεται αυτόματα και εμφανίζεται επιβεβαίωση ότι οι αλλαγές έχουν σωθεί.</p>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -128,16 +223,42 @@ function hydrateComments(list){
 }
 
 const KEY='andres_training_app_v1';
-let people=loadLocal(),view='trainees',selectedPerson='',selectedTrainer='',activeTraineeTab=0,activeTrainerTab=0;
+let people=loadLocal(),view='trainees',selectedPerson='ΟΛΟΙ',selectedTrainer='ΟΛΟΙ',activeTabs={};
 let sb=(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase)?window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null;
+let reminderTimer=null,reminderCount=0;
 
 function setSyncStatus(msg){document.getElementById('syncStatus').textContent=msg;}
 function loadLocal(){try{const raw=JSON.parse(localStorage.getItem(KEY));return hydrateComments(raw||structuredClone(initial))}catch(e){return hydrateComments(structuredClone(initial))}}
 function saveLocal(){localStorage.setItem(KEY,JSON.stringify(people))}
 
+function showSavedDisclaimer(sourceText){
+  reminderCount+=1;
+  const box=document.getElementById('savedDisclaimer');
+  const txt=document.getElementById('savedDisclaimerText');
+  const meta=document.getElementById('savedDisclaimerMeta');
+  const nowStr=new Date().toLocaleTimeString('el-GR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  txt.textContent=`✓ Οι αλλαγές έχουν σωθεί (${sourceText}).`;
+  meta.textContent=`Τελευταία αποθήκευση: ${nowStr} · Υπενθύμιση #${reminderCount}`;
+  box.classList.add('show');
+
+  if(reminderTimer) clearInterval(reminderTimer);
+  let ticks=0;
+  reminderTimer=setInterval(()=>{
+    ticks+=1;
+    if(ticks>=4){clearInterval(reminderTimer);return;}
+    const tNow=new Date().toLocaleTimeString('el-GR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    txt.textContent=`✓ Υπενθύμιση: Οι αλλαγές σας έχουν σωθεί (${sourceText}).`;
+    meta.textContent=`Επιβεβαιώθηκε στις ${tNow}`;
+    box.classList.add('show');
+  },6000);
+}
+
 async function savePersonToCloud(p){
   saveLocal();
-  if(!sb) return;
+  if(!sb){
+    showSavedDisclaimer('τοπική συσκευή');
+    return;
+  }
   setSyncStatus('Αποθήκευση στη βάση...');
   const {error}=await sb.from('trainees_data').upsert({
     trainee_name: p.name,
@@ -145,13 +266,22 @@ async function savePersonToCloud(p){
     record: p,
     updated_at: new Date().toISOString()
   },{onConflict:'trainee_name'});
-  if(error){console.error(error);setSyncStatus('Σφάλμα αποθήκευσης: '+(error.message||''));}
-  else setSyncStatus('Συγχρονισμένο με Supabase');
+  if(error){
+    console.error(error);
+    setSyncStatus('Σφάλμα αποθήκευσης: '+(error.message||''));
+    showSavedDisclaimer('τοπικό αντίγραφο — ελέγξτε σύνδεση βάσης');
+  }else{
+    setSyncStatus('Συγχρονισμένο με Supabase');
+    showSavedDisclaimer('βάση δεδομένων & συσκευή');
+  }
 }
 
 async function saveAllToCloud(){
   saveLocal();
-  if(!sb) return;
+  if(!sb){
+    showSavedDisclaimer('τοπική συσκευή');
+    return;
+  }
   setSyncStatus('Συγχρονισμός όλων των εγγραφών...');
   const rows=people.map(p=>({
     trainee_name: p.name,
@@ -160,12 +290,18 @@ async function saveAllToCloud(){
     updated_at: new Date().toISOString()
   }));
   const {error}=await sb.from('trainees_data').upsert(rows,{onConflict:'trainee_name'});
-  if(error){console.error(error);setSyncStatus('Σφάλμα συγχρονισμού: '+(error.message||''));}
-  else setSyncStatus('Συγχρονισμένο με Supabase');
+  if(error){
+    console.error(error);
+    setSyncStatus('Σφάλμα συγχρονισμού: '+(error.message||''));
+    showSavedDisclaimer('τοπικό αντίγραφο');
+  }else{
+    setSyncStatus('Συγχρονισμένο με Supabase');
+    showSavedDisclaimer('βάση δεδομένων & συσκευή');
+  }
 }
 
 async function initCloudSync(){
-  if(!sb){setSyncStatus('Τοπική αποθήκευση (δεν έχει ρυθμιστεί Supabase)');return;}
+  if(!sb){setSyncStatus('Τοπική αποθήκευση');return;}
   setSyncStatus('Σύνδεση με Supabase...');
   const {data,error}=await sb.from('trainees_data').select('trainee_name,record');
   if(error){console.error(error);setSyncStatus('Σφάλμα σύνδεσης με βάση: '+(error.message||''));return;}
@@ -196,15 +332,53 @@ async function initCloudSync(){
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function allItems(){return people.flatMap(p=>p.items.map((it,i)=>({p,it,i})))}
 function meta(it){return (typeof it[2]==='object'&&it[2])?it[2]:{}}
+function hasTraineeNotes(p){
+  return (p.items||[]).some(it=>String(meta(it).notes||'').trim().length>0);
+}
 function state(it,p){const m=meta(it);if(m.status==='Ολοκληρώθηκε')return m.completed&&m.completed<=p.deadline?'done':'late';if(m.status==='Σε εξέλιξη')return 'progress';return 'pending'}
 function badge(it,p){const m=meta(it);let s=state(it,p);return s==='done'?'Εμπρόθεσμα':s==='late'?'Εκπρόθεσμα':m.status||'Εκκρεμεί'}
 function statusSelectClass(st){if(st==='Σε εξέλιξη')return 'status-progress';if(st==='Ολοκληρώθηκε')return 'status-done';return 'status-pending'}
-function stats(){let a=allItems(),done=a.filter(x=>meta(x.it).status==='Ολοκληρώθηκε').length,ontime=a.filter(x=>meta(x.it).status==='Ολοκληρώθηκε'&&meta(x.it).completed&&meta(x.it).completed<=x.p.deadline).length;
-document.getElementById('stats').innerHTML=`<div class="stat"><b>${people.length}</b><span>Εκπαιδευόμενοι</span></div><div class="stat"><b>${done}/${a.length}</b><span>Ολοκληρωμένοι τομείς</span></div><div class="stat"><b>${ontime}</b><span>Εμπρόθεσμοι</span></div>`}
+
+function stats(){
+  let a=allItems(),done=a.filter(x=>meta(x.it).status==='Ολοκληρώθηκε').length,ontime=a.filter(x=>meta(x.it).status==='Ολοκληρώθηκε'&&meta(x.it).completed&&meta(x.it).completed<=x.p.deadline).length;
+  document.getElementById('stats').innerHTML=`<div class="stat"><b>${people.length}</b><span>Εκπαιδευόμενοι</span></div><div class="stat"><b>${done}/${a.length}</b><span>Ολοκληρωμένοι τομείς</span></div><div class="stat"><b>${ontime}</b><span>Εμπρόθεσμοι</span></div>`;
+}
 
 function groupBadgeHTML(group){
   const ng=normGroup(group)||group;
   return `<span class="group-badge ${groupBadgeClass(group)}" data-group-filter="${esc(ng)}" title="Φιλτράρισμα σε ${esc(ng)}">${esc(ng)}</span>`;
+}
+
+function downloadTraineeReport(pIndex){
+  const p=people[pIndex];
+  if(!p || !hasTraineeNotes(p)) return;
+  const lines=[
+    'ΠΡΟΓΡΑΜΜΑ ΕΚΠΑΙΔΕΥΣΗΣ ΑΝΔΡΩΝ — REPORT ΕΚΠΑΙΔΕΥΟΜΕΝΟΥ',
+    '====================================================',
+    `Ονοματεπώνυμο: ${p.name}`,
+    `Ομάδα: ${normGroup(p.group)}`,
+    `Προθεσμία: ${p.deadline}`,
+    `Ημερομηνία Report: ${new Date().toLocaleDateString('el-GR')}`,
+    ''
+  ];
+  (p.items||[]).forEach((it,idx)=>{
+    const m=meta(it);
+    const st=m.status||'Εκκρεμεί';
+    lines.push(`${idx+1}. Τομέας: ${it[0]}`);
+    lines.push(`   Εκπαιδευτής: ${it[1]}`);
+    lines.push(`   Κατάσταση: ${st} (${badge(it,p)})`);
+    lines.push(`   Ημερομηνία Διορισμού: ${m.exam || '-'}`);
+    lines.push(`   Ημερομηνία Ολοκλήρωσης: ${m.completed || '-'}`);
+    lines.push(`   Σχόλια: ${String(m.notes||'').trim() || '-'}`);
+    lines.push('');
+  });
+  const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');
+  const safeName=p.name.replace(/\s+/g,'_');
+  a.href=URL.createObjectURL(blob);
+  a.download=`report_${safeName}.txt`;
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 
 function syncSelectors(list,trainerNames){
@@ -217,71 +391,88 @@ function syncSelectors(list,trainerNames){
   if(view==='trainees'){
     pSel.style.display='';
     tSel.style.display='none';
-    if(selectedPerson && !list.some(p=>p.name===selectedPerson)) selectedPerson='';
-    pSel.innerHTML=['<option value="">-- Επίλεξε εκπαιδευόμενο --</option>']
+    if(selectedPerson!=='ΟΛΟΙ' && selectedPerson && !list.some(p=>p.name===selectedPerson)) selectedPerson='ΟΛΟΙ';
+    pSel.innerHTML=['<option value="ΟΛΟΙ">ΟΛΟΙ</option>']
       .concat(list.map(p=>`<option value="${esc(p.name)}"${p.name===selectedPerson?' selected':''}>${esc(p.name)} (${esc(normGroup(p.group))})</option>`)).join('');
   }else{
     pSel.style.display='none';
     tSel.style.display='';
-    if(selectedTrainer && !trainerNames.includes(selectedTrainer)) selectedTrainer='';
-    tSel.innerHTML=['<option value="">-- Επίλεξε εκπαιδευτή --</option>']
+    if(selectedTrainer!=='ΟΛΟΙ' && selectedTrainer && !trainerNames.includes(selectedTrainer)) selectedTrainer='ΟΛΟΙ';
+    tSel.innerHTML=['<option value="ΟΛΟΙ">ΟΛΟΙ</option>']
       .concat(trainerNames.map(name=>`<option value="${esc(name)}"${name===selectedTrainer?' selected':''}>${esc(name)}</option>`)).join('');
   }
 }
 
+function getTabIndex(key,maxLen){
+  const idx=activeTabs[key]||0;
+  return idx>=maxLen?0:idx;
+}
+
 function render(){
   stats();
-  let q=document.getElementById('search').value.toLocaleLowerCase('el');
   let g=normGroup(document.getElementById('group').value);
   let sf=document.getElementById('statusFilter').value;
   let html='';
 
   if(view==='trainees'){
-    let list=people.filter(p=>(!g||normGroup(p.group)===g)&&(!q||(p.name+' '+p.items.map(x=>x[0]+' '+x[1]+' '+(meta(x).areaComment||'')).join(' ')).toLocaleLowerCase('el').includes(q))&&(!sf||p.items.some(x=>(meta(x).status||'Εκκρεμεί')===sf)));
+    let list=people.filter(p=>(!g||normGroup(p.group)===g)&&(!sf||p.items.some(x=>(meta(x).status||'Εκκρεμεί')===sf)));
     syncSelectors(list,[]);
     if(!list.length){
       html='<div class="empty">Δεν βρέθηκαν εκπαιδευόμενοι με αυτά τα κριτήρια.</div>';
-    }else if(!selectedPerson){
-      html='<div class="empty">Επίλεξε έναν εκπαιδευόμενο από τη λίστα παραπάνω για να δεις τα στοιχεία και την πρόοδό του.</div>';
     }else{
-      let p=list.find(x=>x.name===selectedPerson);
-      let visibleItems=p.items.map((it,i)=>({it,i})).filter(x=>!sf||((meta(x.it).status||'Εκκρεμεί')===sf));
-      if(!visibleItems.length) visibleItems=p.items.map((it,i)=>({it,i}));
-      if(activeTraineeTab>=visibleItems.length) activeTraineeTab=0;
-      const current=visibleItems[activeTraineeTab];
-      const tabButtons=visibleItems.map((x,idx)=>`<button type="button" class="subtab${idx===activeTraineeTab?' active':''}" data-subtab="trainee" data-idx="${idx}"><span class="dot ${state(x.it,p)}"></span>${esc(x.it[0])}</button>`).join('');
-      html=`<section class="person">
-        <div class="personhead">
-          <div><h3>${esc(p.name)}</h3><div class="sub">${groupBadgeHTML(p.group)} · Προθεσμία: ${new Date(p.deadline+'T12:00:00').toLocaleDateString('el-GR')}</div></div>
-          <span class="pill">${p.items.filter(x=>meta(x).status==='Ολοκληρώθηκε').length}/${p.items.length} τομείς</span>
-        </div>
-        <div class="subtabs" role="tablist" aria-label="Τομείς εκπαίδευσης">${tabButtons}</div>
-        ${itemHTML(p,current.it,current.i,false)}
-      </section>`;
+      let shown=selectedPerson==='ΟΛΟΙ'?list:list.filter(x=>x.name===selectedPerson);
+      if(!shown.length) shown=list;
+      html=shown.map(p=>{
+        const pIdx=people.indexOf(p);
+        let visibleItems=p.items.map((it,i)=>({it,i})).filter(x=>!sf||((meta(x.it).status||'Εκκρεμεί')===sf));
+        if(!visibleItems.length) visibleItems=p.items.map((it,i)=>({it,i}));
+        const curTab=getTabIndex('t_'+p.name,visibleItems.length);
+        const current=visibleItems[curTab];
+        const canReport=hasTraineeNotes(p);
+        const tabButtons=visibleItems.map((x,idx)=>`<button type="button" class="subtab${idx===curTab?' active':''}" data-subtab="trainee" data-person="${esc(p.name)}" data-idx="${idx}"><span class="dot ${state(x.it,p)}"></span>${esc(x.it[0])}</button>`).join('');
+        return `<section class="person">
+          <div class="personhead">
+            <div>
+              <h3>${esc(p.name)}</h3>
+              <div class="sub">${groupBadgeHTML(p.group)} · Προθεσμία: ${new Date(p.deadline+'T12:00:00').toLocaleDateString('el-GR')}</div>
+            </div>
+            <div class="head-actions">
+              <span class="pill">${p.items.filter(x=>meta(x).status==='Ολοκληρώθηκε').length}/${p.items.length} τομείς</span>
+              <button type="button" class="report-btn" data-report-p="${pIdx}" ${canReport?'':'disabled'} title="${canReport?'Λήψη report εκπαιδευόμενου':'Γράψτε πρώτα σχόλια σε κάποιον τομέα για να ενεργοποιηθεί το Report'}">Report</button>
+            </div>
+          </div>
+          <div class="subtabs" role="tablist" aria-label="Τομείς εκπαίδευσης">${tabButtons}</div>
+          ${itemHTML(p,current.it,current.i,false)}
+        </section>`;
+      }).join('');
     }
-  }
-  else{
+  }else{
     let names=[...new Set(allItems().map(x=>x.it[1]))].sort((a,b)=>a.localeCompare(b,'el'));
-    let availableNames=names.filter(name=>allItems().some(x=>x.it[1]===name&&(!g||normGroup(x.p.group)===g)&&(!q||(name+' '+x.p.name+' '+x.it[0]+' '+(meta(x.it).areaComment||'')).toLocaleLowerCase('el').includes(q))&&(!sf||(meta(x.it).status||'Εκκρεμεί')===sf)));
+    let availableNames=names.filter(name=>allItems().some(x=>x.it[1]===name&&(!g||normGroup(x.p.group)===g)&&(!sf||(meta(x.it).status||'Εκκρεμεί')===sf)));
     syncSelectors([],availableNames);
     if(!availableNames.length){
       html='<div class="empty">Δεν βρέθηκαν εκπαιδευτές με αυτά τα κριτήρια.</div>';
-    }else if(!selectedTrainer){
-      html='<div class="empty">Επίλεξε έναν εκπαιδευτή από τη λίστα παραπάνω για να δεις τις αναθέσεις του.</div>';
     }else{
-      let rows=allItems().filter(x=>x.it[1]===selectedTrainer&&(!g||normGroup(x.p.group)===g)&&(!q||(selectedTrainer+' '+x.p.name+' '+x.it[0]+' '+(meta(x.it).areaComment||'')).toLocaleLowerCase('el').includes(q))&&(!sf||(meta(x.it).status||'Εκκρεμεί')===sf));
-      if(activeTrainerTab>=rows.length) activeTrainerTab=0;
-      const curRow=rows[activeTrainerTab];
-      const trainerTabs=rows.map((x,idx)=>`<button type="button" class="subtab${idx===activeTrainerTab?' active':''}" data-subtab="trainer" data-idx="${idx}"><span class="dot ${state(x.it,x.p)}"></span><span>${esc(x.p.name)} · ${esc(x.it[0])}</span></button>`).join('');
-      html=`<h2 class="sectiontitle">${esc(selectedTrainer)} · ${rows.length} αναθέσεις</h2>
-      <section class="person">
-        <div class="personhead">
-          <div><h3>${esc(curRow.p.name)}</h3><div class="sub">${groupBadgeHTML(curRow.p.group)} · Τομέας: ${esc(curRow.it[0])}</div></div>
-          <span class="pill ${state(curRow.it,curRow.p)}">${badge(curRow.it,curRow.p)}</span>
-        </div>
-        <div class="subtabs" role="tablist" aria-label="Αναθέσεις εκπαιδευτή">${trainerTabs}</div>
-        ${itemHTML(curRow.p,curRow.it,curRow.i,true)}
-      </section>`;
+      let trainersToShow=selectedTrainer==='ΟΛΟΙ'?availableNames:availableNames.filter(n=>n===selectedTrainer);
+      html=trainersToShow.map(tName=>{
+        let rows=allItems().filter(x=>x.it[1]===tName&&(!g||normGroup(x.p.group)===g)&&(!sf||(meta(x.it).status||'Εκκρεμεί')===sf));
+        const curTab=getTabIndex('tr_'+tName,rows.length);
+        const curRow=rows[curTab];
+        const canReport=hasTraineeNotes(curRow.p);
+        const trainerTabs=rows.map((x,idx)=>`<button type="button" class="subtab${idx===curTab?' active':''}" data-subtab="trainer" data-trainer="${esc(tName)}" data-idx="${idx}"><span class="dot ${state(x.it,x.p)}"></span><span>${esc(x.p.name)} · ${esc(x.it[0])}</span></button>`).join('');
+        return `<h2 class="sectiontitle">${esc(tName)} · ${rows.length} αναθέσεις</h2>
+        <section class="person">
+          <div class="personhead">
+            <div><h3>${esc(curRow.p.name)}</h3><div class="sub">${groupBadgeHTML(curRow.p.group)} · Τομέας: ${esc(curRow.it[0])}</div></div>
+            <div class="head-actions">
+              <span class="pill ${state(curRow.it,curRow.p)}">${badge(curRow.it,curRow.p)}</span>
+              <button type="button" class="report-btn" data-report-p="${people.indexOf(curRow.p)}" ${canReport?'':'disabled'} title="${canReport?'Λήψη report εκπαιδευόμενου':'Γράψτε πρώτα σχόλια σε κάποιον τομέα για να ενεργοποιηθεί το Report'}">Report</button>
+            </div>
+          </div>
+          <div class="subtabs" role="tablist" aria-label="Αναθέσεις εκπαιδευτή">${trainerTabs}</div>
+          ${itemHTML(curRow.p,curRow.it,curRow.i,true)}
+        </section>`;
+      }).join('');
     }
   }
   document.getElementById('content').innerHTML=html;
@@ -297,34 +488,53 @@ function itemHTML(p,it,i,showGroupBadge){
     ${areaComment?`<div class="area-note"><div class="area-note-title">Οδηγίες / Σχόλιο τομέα</div>${esc(areaComment)}</div>`:''}
     <div class="fields">
       <label>Κατάσταση<select class="${statusSelectClass(st)}" data-p="${people.indexOf(p)}" data-i="${i}" data-k="status"><option ${st==='Εκκρεμεί'?'selected':''}>Εκκρεμεί</option><option ${st==='Σε εξέλιξη'?'selected':''}>Σε εξέλιξη</option><option ${st==='Ολοκληρώθηκε'?'selected':''}>Ολοκληρώθηκε</option></select></label>
-      <label>Ημερομηνία εξέτασης<input type="date" data-p="${people.indexOf(p)}" data-i="${i}" data-k="exam" value="${esc(m.exam||'')}"></label>
+      <label>Ημερομηνία Διορισμού<input type="date" data-p="${people.indexOf(p)}" data-i="${i}" data-k="exam" value="${esc(m.exam||'')}"></label>
       <label>Ημερομηνία ολοκλήρωσης<input type="date" data-p="${people.indexOf(p)}" data-i="${i}" data-k="completed" value="${esc(m.completed||'')}"></label>
-      <label>Σχόλια<input data-p="${people.indexOf(p)}" data-i="${i}" data-k="notes" value="${esc(m.notes||'')}" placeholder="Προαιρετικά"></label>
+      <label>Σχόλια<input data-p="${people.indexOf(p)}" data-i="${i}" data-k="notes" value="${esc(m.notes||'')}" placeholder="Γράψε σχόλιο για Report"></label>
     </div>
   </div>`;
 }
 
-document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{view=b.dataset.view;document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('active',x===b));render()});
-document.getElementById('personSelect').addEventListener('change',e=>{selectedPerson=e.target.value;activeTraineeTab=0;render()});
-document.getElementById('trainerSelect').addEventListener('change',e=>{selectedTrainer=e.target.value;activeTrainerTab=0;render()});
-['search','group','statusFilter'].forEach(id=>document.getElementById(id).addEventListener(id==='search'?'input':'change',()=>{activeTraineeTab=0;activeTrainerTab=0;render()}));
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  view=b.dataset.view;
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('active',x===b));
+  render();
+});
+
+document.getElementById('personSelect').addEventListener('change',e=>{selectedPerson=e.target.value;render();});
+document.getElementById('trainerSelect').addEventListener('change',e=>{selectedTrainer=e.target.value;render();});
+
+['group','statusFilter'].forEach(id=>{
+  document.getElementById(id).addEventListener('change',()=>{
+    if(view==='trainees') selectedPerson='ΟΛΟΙ';
+    else selectedTrainer='ΟΛΟΙ';
+    render();
+  });
+});
 
 document.getElementById('content').addEventListener('click',e=>{
+  const repBtn=e.target.closest('[data-report-p]');
+  if(repBtn && !repBtn.disabled){
+    downloadTraineeReport(+repBtn.dataset.reportP);
+    return;
+  }
+
   const badgeEl=e.target.closest('[data-group-filter]');
   if(badgeEl){
     const chosenGroup=badgeEl.dataset.groupFilter;
     const gSel=document.getElementById('group');
     gSel.value=(normGroup(gSel.value)===chosenGroup)?'':chosenGroup;
-    activeTraineeTab=0;
-    activeTrainerTab=0;
+    if(view==='trainees') selectedPerson='ΟΛΟΙ';
+    else selectedTrainer='ΟΛΟΙ';
     render();
     return;
   }
+
   const tabBtn=e.target.closest('[data-subtab]');
   if(tabBtn){
     const idx=+tabBtn.dataset.idx;
-    if(tabBtn.dataset.subtab==='trainee') activeTraineeTab=idx;
-    if(tabBtn.dataset.subtab==='trainer') activeTrainerTab=idx;
+    if(tabBtn.dataset.subtab==='trainee') activeTabs['t_'+tabBtn.dataset.person]=idx;
+    if(tabBtn.dataset.subtab==='trainer') activeTabs['tr_'+tabBtn.dataset.trainer]=idx;
     render();
   }
 });
@@ -343,10 +553,25 @@ document.getElementById('content').addEventListener('change',async e=>{
   await savePersonToCloud(p);
 });
 
-document.getElementById('export').onclick=()=>{let blob=new Blob([JSON.stringify(people,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='antres-backup.json';a.click();URL.revokeObjectURL(a.href)};
+document.getElementById('export').onclick=()=>{
+  let blob=new Blob([JSON.stringify(people,null,2)],{type:'application/json'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='antres-backup.json';a.click();URL.revokeObjectURL(a.href);
+  showSavedDisclaimer('εξαγωγή αντιγράφου ασφαλείας');
+};
 document.getElementById('import').onclick=()=>document.getElementById('file').click();
-document.getElementById('file').onchange=async e=>{try{let x=JSON.parse(await e.target.files[0].text());if(!Array.isArray(x))throw 0;people=hydrateComments(x);render();await saveAllToCloud();alert('Το αντίγραφο εισήχθη.')}catch(err){alert('Το αρχείο δεν είναι έγκυρο αντίγραφο.')}};
-document.getElementById('reset').onclick=async()=>{if(confirm('Να διαγραφούν οι αλλαγές και να επανέλθουν τα αρχικά δεδομένα;')){people=hydrateComments(structuredClone(initial));render();await saveAllToCloud()}};
+document.getElementById('file').onchange=async e=>{
+  try{
+    let x=JSON.parse(await e.target.files[0].text());
+    if(!Array.isArray(x))throw 0;
+    people=hydrateComments(x);render();await saveAllToCloud();
+    alert('Το αντίγραφο εισήχθη.');
+  }catch(err){alert('Το αρχείο δεν είναι έγκυρο αντίγραφο.')}
+};
+document.getElementById('reset').onclick=async()=>{
+  if(confirm('Να διαγραφούν οι αλλαγές και να επανέλθουν τα αρχικά δεδομένα;')){
+    people=hydrateComments(structuredClone(initial));render();await saveAllToCloud();
+  }
+};
 
 render();
 initCloudSync();
