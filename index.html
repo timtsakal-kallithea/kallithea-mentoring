@@ -45,6 +45,14 @@ main{max-width:920px;margin:auto;padding:16px}
 .person h3{margin:0 0 6px;font-size:19px}
 .sub{font-size:14.5px;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 
+.deadline-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  border:0;border-radius:10px;padding:6px 12px;
+  background:#c62828;color:#ffffff;
+  font:700 14px/1.2 system-ui,-apple-system,Segoe UI,sans-serif;
+  cursor:default;box-shadow:0 2px 6px rgba(198,40,40,.22)
+}
+
 .head-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .report-btn{
   border:1.5px solid var(--green);background:var(--green);color:#fff;
@@ -348,6 +356,11 @@ function groupBadgeHTML(group){
   return `<span class="group-badge ${groupBadgeClass(group)}" data-group-filter="${esc(ng)}" title="Φιλτράρισμα σε ${esc(ng)}">${esc(ng)}</span>`;
 }
 
+function deadlineButtonHTML(deadline){
+  const formatted=new Date(deadline+'T12:00:00').toLocaleDateString('el-GR');
+  return `<button type="button" class="deadline-btn" aria-label="Προθεσμία ${esc(formatted)}">Προθεσμία: ${esc(formatted)}</button>`;
+}
+
 function downloadTraineeReport(pIndex){
   const p=people[pIndex];
   if(!p || !hasTraineeNotes(p)) return;
@@ -433,7 +446,7 @@ function render(){
           <div class="personhead">
             <div>
               <h3>${esc(p.name)}</h3>
-              <div class="sub">${groupBadgeHTML(p.group)} · Προθεσμία: ${new Date(p.deadline+'T12:00:00').toLocaleDateString('el-GR')}</div>
+              <div class="sub">${groupBadgeHTML(p.group)} ${deadlineButtonHTML(p.deadline)}</div>
             </div>
             <div class="head-actions">
               <span class="pill">${p.items.filter(x=>meta(x).status==='Ολοκληρώθηκε').length}/${p.items.length} τομείς</span>
@@ -462,7 +475,10 @@ function render(){
         return `<h2 class="sectiontitle">${esc(tName)} · ${rows.length} αναθέσεις</h2>
         <section class="person">
           <div class="personhead">
-            <div><h3>${esc(curRow.p.name)}</h3><div class="sub">${groupBadgeHTML(curRow.p.group)} · Τομέας: ${esc(curRow.it[0])}</div></div>
+            <div>
+              <h3>${esc(curRow.p.name)}</h3>
+              <div class="sub">${groupBadgeHTML(curRow.p.group)} ${deadlineButtonHTML(curRow.p.deadline)} · Τομέας: ${esc(curRow.it[0])}</div>
+            </div>
             <div class="head-actions">
               <span class="pill ${state(curRow.it,curRow.p)}">${badge(curRow.it,curRow.p)}</span>
               <button type="button" class="report-btn" data-report-p="${people.indexOf(curRow.p)}" ${canReport?'':'disabled'} title="${canReport?'Λήψη report εκπαιδευόμενου':'Γράψτε πρώτα σχόλια σε κάποιον τομέα για να ενεργοποιηθεί το Report'}">Report</button>
